@@ -132,6 +132,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## Installation
 
+### Option 1: Local Development Setup
+
 1. Clone the repository
 2. Set up Python environment:
    ```bash
@@ -146,7 +148,60 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
    npm install
    ```
 
+### Option 2: Docker Setup
+
+#### Building Individual Images
+
+1. **Build the WebSocket server image:**
+   ```bash
+   docker build -f Dockerfile.websocket -t ii-agent-websocket .
+   ```
+
+2. **Build the frontend image:**
+   ```bash
+   cd frontend
+   docker build -t ii-agent-frontend .
+   ```
+
+#### Using Docker Compose (Recommended)
+
+**Prerequisites:** Make sure you have created a `.env` file in the root directory with the required environment variables (see Environment Variables section above).
+
+1. **Build and start all services:**
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Start services in detached mode:**
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Stop all services:**
+   ```bash
+   docker-compose down
+   ```
+
+The Docker Compose setup will automatically:
+- Build the WebSocket server and frontend images
+- Set up networking between containers
+- Expose the frontend on port 3000 and WebSocket server on port 8000
+- Mount your `.env` file and workspace directory for configuration
+- Include health checks for reliable service startup
+
 ## Usage
+
+### Docker Usage (Recommended)
+
+If you're using Docker Compose, simply run:
+
+```bash
+docker-compose up -d
+```
+
+Then open your browser to:
+- **Frontend**: http://localhost:3000
+- **WebSocket API**: http://localhost:8000
 
 ### Command Line Interface
 

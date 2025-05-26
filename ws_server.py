@@ -85,6 +85,12 @@ message_processors: Dict[WebSocket, asyncio.Task] = {}
 global_args = None
 
 
+@app.get("/health")
+async def health_check():
+    """Simple health check endpoint."""
+    return {"status": "ok", "message": "WebSocket server is running"}
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()

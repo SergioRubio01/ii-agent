@@ -1,0 +1,38 @@
+# Use Python 3.10 as required by the project
+FROM python:3.10-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY pyproject.toml README.md ./
+COPY src/ ./src/
+COPY ws_server.py utils.py ./
+
+# Install the project and all dependencies
+RUN pip install --no-cache-dir -e .
+
+# Install additional dependencies not in pyproject.toml
+RUN pip install --no-cache-dir docker
+
+# Install playwright browsers
+RUN playwright install --with-deps chromium
+
+# Create workspace directory
+RUN mkdir -p /app/workspace
+
+# Set environment variables
+ENV PYTHONPATH=/app
+
+# Expose port 8000
+EXPOSE 8000
+
+# Run the WebSocket server
+CMD ["python", "ws_server.py", "--port", "8000", "--host", "0.0.0.0"] 
